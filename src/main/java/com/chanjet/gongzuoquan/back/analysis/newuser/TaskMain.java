@@ -58,7 +58,7 @@ public class TaskMain {
     JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 
     // get current date
-    String date = "20160114/";
+    String date = "20160115/";
     // get hdfs path
     String path = hadoopurl + paths + date;
 
@@ -67,12 +67,12 @@ public class TaskMain {
     long time = System.currentTimeMillis();
     JavaRDD<String> lines = ctx.textFile(path + "*");
     long time1 = System.currentTimeMillis();
-    System.out.println("加载文件的耗时是：" + (time1 - time));
+    System.out.println("zhaoweihLog load file cost：" + (time1 - time));
 
     // count how many lines get
-    System.out.println("总的消息条数：" + lines.count());
+    System.out.println("zhaoweihLog title count：" + lines.count());
     long time2 = System.currentTimeMillis();
-    System.out.println("计算耗时耗时是：" + (time2 - time1));
+    System.out.println("zhaoweihLog count cost ：" + (time2 - time1));
 
   }
 

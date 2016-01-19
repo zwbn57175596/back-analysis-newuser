@@ -35,7 +35,7 @@
   </dependencies>
 
   <build>
-    <finalName>${project.artifactId} - ${project.version}</finalName>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -48,26 +48,20 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.3</version>
         <configuration>
-          <finalName>gongzuoquan-app-server</finalName>
-          <classesDirectory>target/classes/</classesDirectory>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
-            <descriptorRefs>
-              <descriptorRef>jar-with_dependencides</descriptorRef>
-            </descriptorRefs>
             <manifest>
               <mainClass>com.chanjet.gongzuoquan.back.analysis.newuser.TaskMain</mainClass>
             </manifest>
           </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
-        <configuration>
-          <finalName>${artifactId}</finalName>
         </configuration>
         <executions>
           <execution>
