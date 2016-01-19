@@ -5,6 +5,7 @@ import com.chanjet.gongzuoquan.dao.pg.model.CallBack;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
+import java.util.regex.Pattern;
+
+import static com.chanjet.gongzuoquan.back.analysis.newuser.BusiDataUriCollection.BUSI_URI_SET;
 
 /**
  * 任务执行起始入口
@@ -48,7 +52,7 @@ public class TaskMain {
      */
 
     // step 1
-    FutureTask<Set<Long>> userIdSet = getTodayNewUserIds();
+//    FutureTask<Set<Long>> userIdSet = getTodayNewUserIds();
 
     // step 2
     // initial spark context
@@ -69,10 +73,21 @@ public class TaskMain {
     long time1 = System.currentTimeMillis();
     System.out.println("zhaoweihLog load file cost：" + (time1 - time));
 
+    final Pattern p = Pattern.compile("(\"requestUrl\"\\:)\"[/[\\w]+]+\"");
+
     // count how many lines get
-    System.out.println("zhaoweihLog title count：" + lines.count());
-    long time2 = System.currentTimeMillis();
-    System.out.println("zhaoweihLog count cost ：" + (time2 - time1));
+//    System.out.println("zhaoweihLog title count：" + lines.count());
+//    long time2 = System.currentTimeMillis();
+//    System.out.println("zhaoweihLog count cost ：" + (time2 - time1));
+
+    lines.filter(new Function<String, Boolean>() {
+      @Override
+      public Boolean call(String v1) throws Exception {
+        String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
+        System.out.println("zhaoweiDebug: " + s);
+        return BUSI_URI_SET.contains(s);
+      }
+    });
 
   }
 
@@ -80,8 +95,9 @@ public class TaskMain {
    * 查询当日新增用户
    * @return 当日新增用户userid set
    */
+  @SuppressWarnings("unused")
   private static FutureTask<Set<Long>> getTodayNewUserIds() {
-    FutureTask<Set<Long>> futureTask = new FutureTask<Set<Long>>(new Callable<Set<Long>>() {
+    FutureTask<Set<Long>> futureTask = new FutureTask<>(new Callable<Set<Long>>() {
       public Set<Long> call() throws Exception {
 
         // construct params
@@ -94,20 +110,21 @@ public class TaskMain {
         //noinspection unchecked
         params.add(cal.getTimeInMillis());
 
-        baseDbcpDao.query(0, " SELECT t.user_id as userid FROM user_info t WHERE t.create_time >= ? ",
-            params, new CallBack() {
-          public Object getResultObject(ResultSet rs) {
-            Set<Long> set = new HashSet<Long>();
-            try {
-              while (rs.next()) {
-                set.add(rs.getLong("userid"));
-              }
-            } catch (SQLException e) {
-              logger.error("", e);
-            }
-            return set;
-          }
-        });
+        baseDbcpDao
+            .query(0, " SELECT t.user_id as userid FROM user_info t WHERE t.create_time >= ? ",
+                params, new CallBack() {
+                  public Object getResultObject(ResultSet rs) {
+                    Set<Long> set = new HashSet<>();
+                    try {
+                      while (rs.next()) {
+                        set.add(rs.getLong("userid"));
+                      }
+                    } catch (SQLException e) {
+                      logger.error("", e);
+                    }
+                    return set;
+                  }
+                });
         return null;
       }
     });
