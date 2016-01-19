@@ -71,27 +71,27 @@ public class TaskMain {
     long time = System.currentTimeMillis();
     JavaRDD<String> lines = ctx.textFile(path + "*");
     long time1 = System.currentTimeMillis();
-    System.out.println("zhaoweihLog load file cost：" + (time1 - time));
+    logger.info("zhaoweih load file cost: {}",  (time1 - time));
 
     final Pattern p = Pattern.compile("(\"requestUrl\"\\:)\"[/[\\w]+]+\"");
 
     // count how many lines get
-    System.out.println("zhaoweihLog title count：" + lines.count());
+    logger.info("zhaoweih title count: {}", lines.count());
     long time2 = System.currentTimeMillis();
-    System.out.println("zhaoweihLog count cost ：" + (time2 - time1));
+    logger.info("zhaoweih count cost: {}", (time2 - time1));
 
     lines.filter(new Function<String, Boolean>() {
       @Override
       public Boolean call(String v1) throws Exception {
         String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
-        System.out.println("zhaoweiDebug: " + s);
+        logger.info("zhaoweih str:{}", s);
         return BUSI_URI_SET.contains(s);
       }
     });
 
-    System.out.println("zhaoweihLog title count：" + lines.count());
+    logger.info("zhaoweih title count2: {}", lines.count());
     long time3 = System.currentTimeMillis();
-    System.out.println("zhaoweihLog filter count cost ：" + (time3 - time2));
+    logger.info("zhaoweih filter count cost: {}" + (time3 - time2));
   }
 
   /**
