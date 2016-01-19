@@ -1,3 +1,5 @@
+package com.chanjet.gongzuoquan.back.analysis.newuser;
+
 import com.chanjet.gongzuoquan.dao.pg.base.BaseDbcpDao;
 import com.chanjet.gongzuoquan.dao.pg.model.CallBack;
 import org.apache.spark.SparkConf;

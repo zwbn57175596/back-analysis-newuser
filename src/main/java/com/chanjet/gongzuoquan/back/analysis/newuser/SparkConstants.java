@@ -1,3 +1,5 @@
+package com.chanjet.gongzuoquan.back.analysis.newuser;
+
 import com.chanjet.gongzuoquan.configcenter.ZkHelp;
 import com.chanjet.gongzuoquan.utils.StringUtils;
 import com.github.zkclient.IZkDataListener;

@@ -44,10 +44,11 @@
           <classesDirectory>target/classes/</classesDirectory>
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
+            <descriptorRefs>
+              <descriptorRef>jar-with_dependencides</descriptorRef>
+            </descriptorRefs>
             <manifest>
               <mainClass>com.chanjet.gongzuoquan.app.App</mainClass>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
             </manifest>
           </archive>
         </configuration>
@@ -57,9 +58,6 @@
         <version>2.2-beta-2</version>
         <configuration>
           <finalName>${artifactId}</finalName>
-          <descriptors>
-            <descriptor>src/main/assemble/distribution.xml</descriptor>
-          </descriptors>
         </configuration>
         <executions>
           <execution>
