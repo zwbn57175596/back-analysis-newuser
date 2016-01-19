@@ -76,9 +76,9 @@ public class TaskMain {
     final Pattern p = Pattern.compile("(\"requestUrl\"\\:)\"[/[\\w]+]+\"");
 
     // count how many lines get
-//    System.out.println("zhaoweihLog title count：" + lines.count());
-//    long time2 = System.currentTimeMillis();
-//    System.out.println("zhaoweihLog count cost ：" + (time2 - time1));
+    System.out.println("zhaoweihLog title count：" + lines.count());
+    long time2 = System.currentTimeMillis();
+    System.out.println("zhaoweihLog count cost ：" + (time2 - time1));
 
     lines.filter(new Function<String, Boolean>() {
       @Override
@@ -89,6 +89,9 @@ public class TaskMain {
       }
     });
 
+    System.out.println("zhaoweihLog title count：" + lines.count());
+    long time3 = System.currentTimeMillis();
+    System.out.println("zhaoweihLog filter count cost ：" + (time3 - time2));
   }
 
   /**
