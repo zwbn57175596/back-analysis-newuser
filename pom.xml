@@ -48,7 +48,7 @@
               <descriptorRef>jar-with_dependencides</descriptorRef>
             </descriptorRefs>
             <manifest>
-              <mainClass>com.chanjet.gongzuoquan.app.App</mainClass>
+              <mainClass>com.chanjet.gongzuoquan.back.analysis.newuser.TaskMain</mainClass>
             </manifest>
           </archive>
         </configuration>
