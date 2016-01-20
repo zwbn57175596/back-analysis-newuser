@@ -29,6 +29,8 @@ public class TaskMain {
 
   private static final Logger logger = LoggerFactory.getLogger(TaskMain.class);
 
+  private static final Logger logA = LoggerFactory.getLogger("A");
+
   private static final String paths = "/user/logs/aop/";
   private static final String hadoopurl = SparkConstants.getInstance().getSparkzkpath();
 
@@ -84,7 +86,7 @@ public class TaskMain {
       @Override
       public Boolean call(String v1) throws Exception {
         String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
-        logger.info("zhaoweih str:{}", s);
+        logA.info("zhaoweih str:{}", s);
         return BUSI_URI_SET.contains(s);
       }
     });
