@@ -85,10 +85,16 @@ public class TaskMain {
     JavaRDD<String> afterFilter =
         lines.filter(new Function<String, Boolean>() {
           @Override
-          public Boolean call(String v1) throws Exception {
-            String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
-            logA.info("zhaoweih str:{}", s);
-            return BUSI_URI_SET.contains(s);
+          public Boolean call(String v1) {
+            logA.info("str for match: {}", v1);
+            try {
+              String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
+              logA.info("uri str:{}", s);
+              return BUSI_URI_SET.contains(s);
+            } catch (Exception e) {
+              logger.error("match", e);
+            }
+            return false;
           }
         });
 
