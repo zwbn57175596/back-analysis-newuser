@@ -36,7 +36,6 @@ public class TaskMain {
 
   private static final BaseDbcpDao baseDbcpDao = new BaseDbcpDao("/gongzuoquan/back/pg");
 
-
   public static void main(String[] args) {
 
     /*
@@ -54,7 +53,7 @@ public class TaskMain {
      */
 
     // step 1
-//    FutureTask<Set<Long>> userIdSet = getTodayNewUserIds();
+    //    FutureTask<Set<Long>> userIdSet = getTodayNewUserIds();
 
     // step 2
     // initial spark context
@@ -73,7 +72,7 @@ public class TaskMain {
     long time = System.currentTimeMillis();
     JavaRDD<String> lines = ctx.textFile(path + "*");
     long time1 = System.currentTimeMillis();
-    logger.info("zhaoweih load file cost: {}",  (time1 - time));
+    logger.info("zhaoweih load file cost: {}", (time1 - time));
 
     final Pattern p = Pattern.compile("(\"requestUrl\"\\:)\"[/[\\w]+]+\"");
 
@@ -83,16 +82,17 @@ public class TaskMain {
     logger.info("zhaoweih count cost: {}", (time2 - time1));
 
     logA.info("before filter test");
-    lines = lines.filter(new Function<String, Boolean>() {
-      @Override
-      public Boolean call(String v1) throws Exception {
-        String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
-        logA.info("zhaoweih str:{}", s);
-        return BUSI_URI_SET.contains(s);
-      }
-    });
+    JavaRDD<String> afterFilter =
+        lines.filter(new Function<String, Boolean>() {
+          @Override
+          public Boolean call(String v1) throws Exception {
+            String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
+            logA.info("zhaoweih str:{}", s);
+            return BUSI_URI_SET.contains(s);
+          }
+        });
 
-    logger.info("zhaoweih title count2: {}", lines.count());
+    logger.info("zhaoweih afterFilter count2: {}", afterFilter.count());
     long time3 = System.currentTimeMillis();
     logger.info("zhaoweih filter count cost: {}" + (time3 - time2));
   }
