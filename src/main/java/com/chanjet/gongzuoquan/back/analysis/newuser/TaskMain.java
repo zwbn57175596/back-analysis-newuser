@@ -63,7 +63,7 @@ public class TaskMain {
     JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 
     // get current date
-    String date = "20160115/";
+    String date = "201601*/";
     // get hdfs path
     String path = hadoopurl + paths + date;
 
@@ -77,7 +77,7 @@ public class TaskMain {
     final Pattern p = Pattern.compile("(\"requestUrl\"\\:)\"[/[\\w]+]+\"");
 
     // count how many lines get
-    logger.info("zhaoweih title count: {}", lines.count());
+//    logger.info("zhaoweih title count: {}", lines.count());
     long time2 = System.currentTimeMillis();
     logger.info("zhaoweih count cost: {}", (time2 - time1));
 
