@@ -6,6 +6,7 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +104,13 @@ public class TaskMain {
           }
         });
 
-    logger.info("zhaoweih afterFilter count2: {}", afterFilter.count());
+    afterFilter.foreach(new VoidFunction<String>() {
+      @Override
+      public void call(String s) throws Exception {
+        logA.info("export str: {}", s);
+      }
+    });
+//    logger.info("zhaoweih afterFilter count2: {}", afterFilter.count());
     long time3 = System.currentTimeMillis();
     logger.info("zhaoweih filter count cost: {}" + (time3 - time2));
   }
