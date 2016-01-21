@@ -82,6 +82,7 @@ public class TaskMain {
     long time2 = System.currentTimeMillis();
     logger.info("zhaoweih count cost: {}", (time2 - time1));
 
+    logA.info("before filter test");
     lines.filter(new Function<String, Boolean>() {
       @Override
       public Boolean call(String v1) throws Exception {
