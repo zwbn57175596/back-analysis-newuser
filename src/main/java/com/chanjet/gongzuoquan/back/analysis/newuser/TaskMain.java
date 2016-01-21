@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.chanjet.gongzuoquan.back.analysis.newuser.BusiDataUriCollection.BUSI_URI_SET;
@@ -88,9 +89,13 @@ public class TaskMain {
           public Boolean call(String v1) {
             logA.info("str for match: {}", v1);
             try {
-              String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
-              logA.info("uri str:{}", s);
-              return BUSI_URI_SET.contains(s);
+              Matcher m = p.matcher(v1);
+              if (m.find()) {
+                String s = m.group().split("[:]")[1].replaceAll("[\"]", "");
+                logA.info("uri str:{}", s);
+                return BUSI_URI_SET.contains(s);
+              }
+              return false;
             } catch (Exception e) {
               logger.error("match", e);
             }
