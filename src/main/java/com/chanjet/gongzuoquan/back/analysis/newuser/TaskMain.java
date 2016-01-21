@@ -29,7 +29,7 @@ public class TaskMain {
 
   private static final Logger logger = LoggerFactory.getLogger(TaskMain.class);
 
-  private static final Logger logA = LoggerFactory.getLogger("apA");
+  private static final Logger logA = LoggerFactory.getLogger("A");
 
   private static final String paths = "/user/logs/aop/";
   private static final String hadoopurl = SparkConstants.getInstance().getSparkzkpath();
