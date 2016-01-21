@@ -83,7 +83,7 @@ public class TaskMain {
     logger.info("zhaoweih count cost: {}", (time2 - time1));
 
     logA.info("before filter test");
-    lines.filter(new Function<String, Boolean>() {
+    lines = lines.filter(new Function<String, Boolean>() {
       @Override
       public Boolean call(String v1) throws Exception {
         String s = p.matcher(v1).group().split("[:]")[1].replaceAll("[\"]", "");
