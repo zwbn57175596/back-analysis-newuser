@@ -3,11 +3,15 @@ package com.chanjet.gongzuoquan.back.analysis.newuser;
 import com.chanjet.gongzuoquan.dao.pg.base.BaseDbcpDao;
 import com.chanjet.gongzuoquan.dao.pg.model.CallBack;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.PairFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Tuple2;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,7 +75,8 @@ public class TaskMain {
 
     final Pattern p = Pattern.compile("(\"requestUrl\"\\:)\"[/[\\w]+]+\"");
 
-    JavaRDD<String> mapResult = lines.map(new Function<String, String>() {
+    // map to url rdd
+    JavaRDD<String> mapRdd = lines.map(new Function<String, String>() {
 
       @Override
       public String call(String v1) throws Exception {
@@ -83,10 +88,11 @@ public class TaskMain {
       }
     });
 
+    // filter
     long time2 = System.currentTimeMillis();
     logA.info("before filter test");
     JavaRDD<String> afterFilter =
-        mapResult.filter(new Function<String, Boolean>() {
+        mapRdd.filter(new Function<String, Boolean>() {
           @Override
           public Boolean call(String v1) {
             try {
@@ -98,10 +104,30 @@ public class TaskMain {
           }
         });
 
-    List<String> result = afterFilter.collect();
-    for (String s : result) {
-      logA.info("result str: {}", s);
+    // map to pair
+    JavaPairRDD<String, Integer> pairRdd = afterFilter.mapToPair(
+        new PairFunction<String, String, Integer>() {
+          @Override
+          public Tuple2<String, Integer> call(String s) throws Exception {
+            return new Tuple2<>(s, 1);
+          }
+        });
+
+
+    // reduce
+    JavaPairRDD<String, Integer> counts = pairRdd.reduceByKey(new Function2<Integer, Integer, Integer>() {
+      @Override
+      public Integer call(Integer v1, Integer v2) throws Exception {
+        return v1 + v2;
+      }
+    });
+
+    // output
+    List<Tuple2<String, Integer>> result = counts.collect()
+    for (Tuple2<String, Integer> s : result) {
+      logA.info("result str: {}", s.toString());
     }
+
 
     long time3 = System.currentTimeMillis();
     logger.info("zhaoweih filter count cost: {}" + (time3 - time2));
