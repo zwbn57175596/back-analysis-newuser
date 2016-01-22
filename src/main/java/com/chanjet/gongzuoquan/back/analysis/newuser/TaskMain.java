@@ -6,16 +6,12 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.VoidFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
@@ -104,13 +100,12 @@ public class TaskMain {
           }
         });
 
-    afterFilter.foreach(new VoidFunction<String>() {
-      @Override
-      public void call(String s) throws Exception {
-        logA.info("export str: {}", s);
-      }
-    });
-//    logger.info("zhaoweih afterFilter count2: {}", afterFilter.count());
+
+    List<String> result = afterFilter.collect();
+    for (String s : result) {
+      logA.info("result str: {}", s);
+    }
+
     long time3 = System.currentTimeMillis();
     logger.info("zhaoweih filter count cost: {}" + (time3 - time2));
   }
