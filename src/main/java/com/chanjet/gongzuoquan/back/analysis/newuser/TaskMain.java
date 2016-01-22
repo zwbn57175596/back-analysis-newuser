@@ -104,6 +104,9 @@ public class TaskMain {
           }
         });
 
+    // try repartition
+    afterFilter.repartition(10);
+
     // map to pair
     JavaPairRDD<String, Integer> pairRdd = afterFilter.mapToPair(
         new PairFunction<String, String, Integer>() {
