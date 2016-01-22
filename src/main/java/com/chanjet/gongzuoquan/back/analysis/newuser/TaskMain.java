@@ -123,7 +123,7 @@ public class TaskMain {
     });
 
     // output
-    List<Tuple2<String, Integer>> result = counts.collect()
+    List<Tuple2<String, Integer>> result = counts.collect();
     for (Tuple2<String, Integer> s : result) {
       logA.info("result str: {}", s.toString());
     }
