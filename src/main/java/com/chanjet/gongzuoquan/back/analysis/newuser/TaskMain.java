@@ -67,39 +67,36 @@ public class TaskMain {
 
     // step 3
     // get file RDD
-    long time = System.currentTimeMillis();
     JavaRDD<String> lines = ctx.textFile(path + "*");
-    long time1 = System.currentTimeMillis();
-    logger.info("zhaoweih load file cost: {}", (time1 - time));
 
     final Pattern p = Pattern.compile("(\"requestUrl\"\\:)\"[/[\\w]+]+\"");
 
-    // count how many lines get
-//    logger.info("zhaoweih title count: {}", lines.count());
-    long time2 = System.currentTimeMillis();
-    logger.info("zhaoweih count cost: {}", (time2 - time1));
+    JavaRDD<String> mapResult = lines.map(new Function<String, String>() {
 
+      @Override
+      public String call(String v1) throws Exception {
+        Matcher m = p.matcher(v1);
+        if (m.find()) {
+          return m.group().split("[:]")[1].replaceAll("[\"]", "");
+        }
+        return "";
+      }
+    });
+
+    long time2 = System.currentTimeMillis();
     logA.info("before filter test");
     JavaRDD<String> afterFilter =
-        lines.filter(new Function<String, Boolean>() {
+        mapResult.filter(new Function<String, Boolean>() {
           @Override
           public Boolean call(String v1) {
-            logA.info("str for match: {}", v1);
             try {
-              Matcher m = p.matcher(v1);
-              if (m.find()) {
-                String s = m.group().split("[:]")[1].replaceAll("[\"]", "");
-                logA.info("uri str:{}", s);
-                return BUSI_URI_SET.contains(s);
-              }
-              return false;
+              return null != v1 && (!"".equals(v1) && BUSI_URI_SET.contains(v1));
             } catch (Exception e) {
               logger.error("match", e);
             }
             return false;
           }
         });
-
 
     List<String> result = afterFilter.collect();
     for (String s : result) {
