@@ -7,6 +7,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,16 +118,15 @@ public class TaskMain {
 
 
     // reduce
-//    JavaPairRDD<String, Integer> counts = pairRdd.reduceByKey(new Function2<Integer, Integer, Integer>() {
-//      @Override
-//      public Integer call(Integer v1, Integer v2) throws Exception {
-//        return v1 + v2;
-//      }
-//    });
+    JavaPairRDD<String, Integer> counts = pairRdd.reduceByKey(new Function2<Integer, Integer, Integer>() {
+      @Override
+      public Integer call(Integer v1, Integer v2) throws Exception {
+        return v1 + v2;
+      }
+    });
 
     // output
-//    List<Tuple2<String, Integer>> result = counts.collect();
-    List<Tuple2<String, Integer>> result = pairRdd.collect();
+    List<Tuple2<String, Integer>> result = counts.collect();
     for (Tuple2<String, Integer> s : result) {
       logA.info("result str: {}", s.toString());
     }
