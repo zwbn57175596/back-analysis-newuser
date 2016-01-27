@@ -88,6 +88,8 @@ public class TaskMain {
       }
     });
 
+    printToLogA("mapRdd", mapRdd.collect());
+
     // filter
     long time2 = System.currentTimeMillis();
     logA.info("before filter test.. path: {}", date);
@@ -104,8 +106,9 @@ public class TaskMain {
           }
         });
 
+    printToLogA("mapafterFilterRdd", afterFilter.collect());
     // try repartition
-    afterFilter.repartition(10);
+//    afterFilter.repartition(10);
 
     // map to pair
     JavaPairRDD<String, Integer> pairRdd = afterFilter.mapToPair(
@@ -116,7 +119,7 @@ public class TaskMain {
           }
         });
 
-
+    printToLogA("pairRdd", pairRdd.collect());
     // reduce
     JavaPairRDD<String, Integer> counts = pairRdd.reduceByKey(new Function2<Integer, Integer, Integer>() {
       @Override
@@ -134,6 +137,12 @@ public class TaskMain {
 
     long time3 = System.currentTimeMillis();
     logger.info("zhaoweih filter count cost: {}" + (time3 - time2));
+  }
+
+  private static void printToLogA(String title, List javaRDD) {
+    for (Object o : javaRDD) {
+      logA.info("print {} : {}", title, o);
+    }
   }
 
   /**
