@@ -90,7 +90,7 @@ public class TaskMain {
 
     // filter
     long time2 = System.currentTimeMillis();
-    logA.info("before filter test");
+    logA.info("before filter test.. path: {}", date);
     JavaRDD<String> afterFilter =
         mapRdd.filter(new Function<String, Boolean>() {
           @Override
