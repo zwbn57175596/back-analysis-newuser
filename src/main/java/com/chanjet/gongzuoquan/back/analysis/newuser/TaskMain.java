@@ -65,7 +65,7 @@ public class TaskMain {
     JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 
     // get current date
-    String date = "201601*/";
+    String date = "20160115/";
     // get hdfs path
     String path = hadoopurl + paths + date;
 
