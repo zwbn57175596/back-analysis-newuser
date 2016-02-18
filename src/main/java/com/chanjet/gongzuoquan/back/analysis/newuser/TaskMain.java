@@ -88,6 +88,7 @@ public class TaskMain {
       }
     });
 
+
     printToLogA("mapRdd", mapRdd.collect());
 
     // filter
